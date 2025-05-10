@@ -1,6 +1,12 @@
 "use client";
 
-import { PaperclipIcon, PlusCircleIcon, XIcon } from "lucide-react";
+import {
+  AlertCircleIcon,
+  PaperclipIcon,
+  PlusCircleIcon,
+  UploadIcon,
+  XIcon,
+} from "lucide-react";
 
 import { formatBytes, useFileUpload } from "@/hooks/use-file-upload";
 import { Button } from "@/components/ui/button";
