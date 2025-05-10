@@ -21,7 +21,6 @@ export function ThemeSwitcher() {
             variant={"outline"}
             className={cn(themes[idx]===theme ? active : null)}
             onClick={() => {
-              console.log(idx,themes[idx])
               if (idx < themes.length - 1){
                 setIdx((p)=>p+1)
               } else {

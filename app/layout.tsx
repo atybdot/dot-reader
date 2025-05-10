@@ -3,6 +3,9 @@ import { Geist_Mono, Plus_Jakarta_Sans, Lora } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/providers/theme-provider";
 import { Navbar } from "@/components/blocks/navbar";
+import {
+  ClerkProvider,
+} from "@clerk/nextjs";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -31,17 +34,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${plusJakarta.variable} ${loraserif.variable} ${geistMono.variable} antialiased`}
-      >
-        <ThemeProvider>
-          <section className="grid min-h-svh grid-rows-[auto_1fr] ">
-            <Navbar />
-            {children}
-          </section>
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${plusJakarta.variable} ${loraserif.variable} ${geistMono.variable} antialiased`}
+        >
+          <ThemeProvider>
+            <section className="grid min-h-svh grid-rows-[auto_auto_1fr] ">
+              <Navbar />
+              {children}
+            </section>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
