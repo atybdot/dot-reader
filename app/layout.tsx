@@ -3,9 +3,8 @@ import { Geist_Mono, Plus_Jakarta_Sans, Lora } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/providers/theme-provider";
 import { Navbar } from "@/components/blocks/navbar";
-import {
-  ClerkProvider,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -45,6 +44,7 @@ export default function RootLayout({
               {children}
             </section>
           </ThemeProvider>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

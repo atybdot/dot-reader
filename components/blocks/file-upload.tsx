@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  AlertCircleIcon,
-  PaperclipIcon,
-  PlusCircleIcon,
-  UploadIcon,
-  XIcon,
-} from "lucide-react";
+import { PaperclipIcon, PlusCircleIcon, XIcon } from "lucide-react";
 
 import { formatBytes, useFileUpload } from "@/hooks/use-file-upload";
 import { Button } from "@/components/ui/button";
@@ -30,7 +24,7 @@ export default function Component() {
     },
   ] = useFileUpload({
     maxSize,
-    accept: "image/*",
+    accept: ".epub",
   });
 
   const file = files[0];
