@@ -30,7 +30,7 @@ export default function Component() {
     },
   ] = useFileUpload({
     maxSize,
-    accept: "image/*",
+    accept: ".epub",
   });
 
   const file = files[0];
