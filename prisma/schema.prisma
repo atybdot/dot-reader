@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+  
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id    String @id
+  email String @unique
+  Files File[]
+
+  @@map("user")
+}
+
+model File {
+  id         String   @id @default(cuid())
+  location   String
+  metadata   Metadata @relation(fields: [metadataId], references: [id])
+  metadataId String   @unique
+  userid     String?
+  user       User?    @relation(fields: [userid], references: [id])
+
+  @@map("file")
+}
+
+model Metadata {
+  id   String @id @default(cuid())
+  File File[]
+
+  title      String
+  cover      String
+  author     String
+  publisher  String   @default("not found")
+  year       String   @default("not found")
+  totalPages Int      @default(0)
+  ISBN       String[]
+  language   String   @default("en")
+
+  @@map("metadata")
+}
