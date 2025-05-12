@@ -18,7 +18,7 @@ model User {
 
 model File {
   id         String   @id @default(cuid())
-  location   String
+  src        String
   metadata   Metadata @relation(fields: [metadataId], references: [id])
   metadataId String   @unique
   userid     String?
@@ -40,8 +40,8 @@ model Metadata {
   identifiers String[]
   language    String   @default("en")
   rights      String   @default("none")
-  tags        String[]
-  category    String
+  tags        String[] @default(["no tags"])
+  category    String   @default("no category")
 
   @@map("metadata")
 }
