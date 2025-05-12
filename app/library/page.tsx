@@ -1,7 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 import { uploadDialogAtom } from "@/atoms/upload-dialog.atom";
 import AddNewBook from "@/components/blocks/add-book";
+
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useSetAtom } from "jotai";
 export default function Page() {
