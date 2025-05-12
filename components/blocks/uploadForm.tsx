@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { CloudUpload, Paperclip } from "lucide-react";
+import { CloudUpload, Info } from "lucide-react";
 import {
   FileInput,
   FileUploader,
@@ -22,22 +22,27 @@ import {
 } from "@/components/ui/file-upload";
 import { Input } from "@/components/ui/input";
 import { DropzoneOptions } from "react-dropzone";
+import { PartialMetadata } from "@/types/metadata";
+import { CredenzaClose, CredenzaFooter } from "../ui/vaul";
+import { Button } from "../ui/button";
+import { Skeleton } from "../ui/skeleton";
+import { Spinner } from "../ui/spinner";
 
-const formSchema = z.object({
+export const formSchema = z.object({
   cover: z.string(),
   title: z.string().min(1),
   author: z.string().min(1),
-  year: z.number(),
-  isbn: z.string().min(1),
-  pages: z.number(),
+  year: z.string(),
+  identifiers: z.array(z.string().min(1)).nonempty("specify identifier"),
+  totalPages: z.number(),
   language: z.string().min(1),
 });
 
 export default function UploadForm({
-  file,
+  metadata,
   ref,
 }: {
-  file: File;
+  metadata: PartialMetadata;
   ref: React.Ref<HTMLFormElement>;
 }) {
   const [files, setFiles] = useState<File[] | null>(null);
@@ -54,30 +59,44 @@ export default function UploadForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: file?.name,
+      title: metadata.title,
+      author: metadata.author,
+      cover: metadata.cover,
+      year: metadata.year,
+      language: metadata.language,
+      identifiers: metadata.identifiers,
+      totalPages: 120,
     },
   });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await new Promise((res) => {
+      setTimeout(() => {
+        res("");
+      }, 2000);
+    });
     try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
+      toast.info("form submited", {
+        description: (
+          <pre>
+            <code>{JSON.stringify(values, null, 2)}</code>
+          </pre>
+        ),
+      });
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
     }
   }
 
+  useEffect(() => {
+    setURL(metadata.cover);
+  }, []);
   return (
     <Form {...form}>
       <form
         ref={ref}
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 max-w-3xl mx-auto text-muted-foreground"
+        className="space-y-4 max-w-3xl mx-auto text-foreground"
       >
         <FormField
           name="cover"
@@ -104,7 +123,8 @@ export default function UploadForm({
                     id="fileInput"
                     className="outline-dashed outline-1 outline-muted-foreground/50"
                   >
-                    {files && files.length > 0 && previewURL.length > 0 ? (
+                    {(files && files.length > 0 && previewURL.length > 0) ||
+                    metadata.cover ? (
                       <img
                         className="aspect-video w-10/12 mx-auto p-3 object-contain "
                         src={previewURL}
@@ -138,7 +158,6 @@ export default function UploadForm({
                   </FileUploaderContent>
                 </FileUploader>
               </FormControl>
-              <FormDescription>Cover for the book</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -217,7 +236,7 @@ export default function UploadForm({
           <div className="col-span-4">
             <FormField
               control={form.control}
-              name="isbn"
+              name="identifiers"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>identifier</FormLabel>
@@ -226,10 +245,10 @@ export default function UploadForm({
                       placeholder="-----"
                       disabled
                       type="text"
+                      className="truncate"
                       {...field}
                     />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -239,7 +258,7 @@ export default function UploadForm({
           <div className="col-span-4">
             <FormField
               control={form.control}
-              name="pages"
+              name="totalPages"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>pages</FormLabel>
@@ -270,6 +289,32 @@ export default function UploadForm({
             />
           </div>
         </div>
+        <CredenzaFooter>
+          <CredenzaClose asChild>
+            <Button
+              onClick={() => {}}
+              variant={"destructive"}
+              size={"sm"}
+              className="cursor-pointer opacity-50 hover:opacity-90 transition-all ease-in-out duration-150"
+            >
+              <p>Cancel</p>
+            </Button>
+          </CredenzaClose>
+
+          <Button
+            tabIndex={1}
+            type="submit"
+            size={"sm"}
+            className="cursor-pointer"
+            // disabled={form.formState.isSubmitSuccessful}
+          >
+            {form.formState.isSubmitting ? (
+              <Spinner className="bg-secondary" size={"sm"} />
+            ) : (
+              <p>Upload</p>
+            )}
+          </Button>
+        </CredenzaFooter>
       </form>
     </Form>
   );

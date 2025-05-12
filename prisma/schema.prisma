@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
@@ -19,7 +18,7 @@ model User {
 
 model File {
   id         String   @id @default(cuid())
-  location   String
+  src        String
   metadata   Metadata @relation(fields: [metadataId], references: [id])
   metadataId String   @unique
   userid     String?
@@ -32,14 +31,17 @@ model Metadata {
   id   String @id @default(cuid())
   File File[]
 
-  title      String
-  cover      String
-  author     String
-  publisher  String   @default("not found")
-  year       String   @default("not found")
-  totalPages Int      @default(0)
-  ISBN       String[]
-  language   String   @default("en")
+  title       String
+  cover       String
+  author      String
+  publisher   String   @default("unknown")
+  year        String   @default("unknown")
+  totalPages  Int      @default(0)
+  identifiers String[]
+  language    String   @default("en")
+  rights      String   @default("none")
+  tags        String[] @default(["no tags"])
+  category    String   @default("no category")
 
   @@map("metadata")
 }

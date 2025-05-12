@@ -1,6 +1,6 @@
 "use client";
 import { useAtom } from "jotai";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Credenza,
   CredenzaBody,
@@ -12,14 +12,37 @@ import {
 } from "@/components/ui/vaul";
 import { Button } from "./ui/button";
 import { uploadDialogAtom } from "@/atoms/upload-dialog.atom";
-import { Trash2Icon, UploadIcon } from "lucide-react";
 import { filesAtom } from "@/atoms/files.atom";
-import UploadForm from "./blocks/uploadForm";
+import UploadForm, { formSchema } from "./blocks/uploadForm";
+import { extractMetadata } from "@/utils/extractMetadata";
+
+import UploadFormSkeleton from "./skeletons/upload-form.skeleton";
+import { Skeleton } from "./ui/skeleton";
+import { PartialMetadata } from "@/types/metadata";
 
 function UploadDialog() {
   const [open, setOpen] = useAtom(uploadDialogAtom);
   const [files, setFiles] = useAtom(filesAtom);
   const formRef = useRef<HTMLFormElement>(null);
+  const [loading, setLoading] = useState<boolean>();
+  const [metadata, setMtd] = useState<PartialMetadata>();
+
+  useEffect(() => {
+    (async function () {
+      if (files) {
+        if (files.length > 0) {
+          setLoading(true);
+          const mtd = await extractMetadata(files[0]);
+          setMtd(mtd);
+          setLoading(false);
+          console.log(mtd);
+        }
+      }
+    })();
+    () => {
+      setFiles(null);
+    };
+  }, [files]);
 
   return (
     <Credenza
@@ -38,30 +61,18 @@ function UploadDialog() {
           asChild
           className="min-h-44 overflow-scroll sm:overflow-auto"
         >
-          {files && <UploadForm file={files[0]} ref={formRef} />}
+          {!loading ? (
+            metadata && <UploadForm ref={formRef} metadata={metadata} />
+          ) : (
+            <UploadFormSkeleton />
+          )}
         </CredenzaBody>
-        <CredenzaFooter>
-          <Button
-            type="submit"
-            size={"sm"}
-            className="flex items-center justify-center gap-1 cursor-pointer"
-            onClick={() => formRef.current?.requestSubmit()}
-          >
-            <UploadIcon className="opacity-80" />
-            <p>Upload</p>
-          </Button>
-          <CredenzaClose asChild>
-            <Button
-              onClick={() => {}}
-              variant={"destructive"}
-              size={"sm"}
-              className="flex items-center justify-center gap-1 cursor-pointer"
-            >
-              <Trash2Icon className="opacity-80" />
-              <p>Cancel</p>
-            </Button>
-          </CredenzaClose>
-        </CredenzaFooter>
+        {loading ? (
+          <CredenzaFooter>
+            <Skeleton className="w-3/12 h-10" />
+            <Skeleton className="w-3/12 h-10" />
+          </CredenzaFooter>
+        ) : null}
       </CredenzaContent>
     </Credenza>
   );
