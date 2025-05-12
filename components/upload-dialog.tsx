@@ -13,7 +13,7 @@ import {
 import { Button } from "./ui/button";
 import { uploadDialogAtom } from "@/atoms/upload-dialog.atom";
 import { filesAtom } from "@/atoms/files.atom";
-import UploadForm from "./blocks/uploadForm";
+import UploadForm, { formSchema } from "./blocks/uploadForm";
 import { extractMetadata } from "@/utils/extractMetadata";
 
 import UploadFormSkeleton from "./skeletons/upload-form.skeleton";
@@ -25,7 +25,7 @@ function UploadDialog() {
   const [files, setFiles] = useAtom(filesAtom);
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState<boolean>();
-  const [mtd, setMtd] = useState<PartialMetadata>();
+  const [metadata, setMtd] = useState<PartialMetadata>();
 
   useEffect(() => {
     (async function () {
@@ -62,40 +62,17 @@ function UploadDialog() {
           className="min-h-44 overflow-scroll sm:overflow-auto"
         >
           {!loading ? (
-            mtd && <UploadForm ref={formRef} metadata={mtd} />
+            metadata && <UploadForm ref={formRef} metadata={metadata} />
           ) : (
             <UploadFormSkeleton />
           )}
         </CredenzaBody>
-        <CredenzaFooter>
-          {!loading ? (
-            <CredenzaClose asChild>
-              <Button
-                onClick={() => {}}
-                variant={"destructive"}
-                size={"sm"}
-                className="cursor-pointer opacity-50 hover:opacity-90 transition-all ease-in-out duration-150"
-              >
-                <p>Cancel</p>
-              </Button>
-            </CredenzaClose>
-          ) : (
+        {loading ? (
+          <CredenzaFooter>
             <Skeleton className="w-3/12 h-10" />
-          )}
-          {!loading ? (
-            <Button
-              tabIndex={1}
-              type="submit"
-              size={"sm"}
-              className="cursor-pointer"
-              onClick={() => formRef.current?.requestSubmit()}
-            >
-              <p>Upload</p>
-            </Button>
-          ) : (
             <Skeleton className="w-3/12 h-10" />
-          )}
-        </CredenzaFooter>
+          </CredenzaFooter>
+        ) : null}
       </CredenzaContent>
     </Credenza>
   );

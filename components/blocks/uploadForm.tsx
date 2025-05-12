@@ -23,8 +23,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { DropzoneOptions } from "react-dropzone";
 import { PartialMetadata } from "@/types/metadata";
+import { CredenzaClose, CredenzaFooter } from "../ui/vaul";
+import { Button } from "../ui/button";
+import { Skeleton } from "../ui/skeleton";
+import { Spinner } from "../ui/spinner";
 
-const formSchema = z.object({
+export const formSchema = z.object({
   cover: z.string(),
   title: z.string().min(1),
   author: z.string().min(1),
@@ -64,8 +68,12 @@ export default function UploadForm({
       totalPages: 120,
     },
   });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await new Promise((res) => {
+      setTimeout(() => {
+        res("");
+      }, 2000);
+    });
     try {
       toast.info("form submited", {
         description: (
@@ -150,7 +158,6 @@ export default function UploadForm({
                   </FileUploaderContent>
                 </FileUploader>
               </FormControl>
-              <FormDescription>Cover for the book</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -238,10 +245,10 @@ export default function UploadForm({
                       placeholder="-----"
                       disabled
                       type="text"
+                      className="truncate"
                       {...field}
                     />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -282,6 +289,32 @@ export default function UploadForm({
             />
           </div>
         </div>
+        <CredenzaFooter>
+          <CredenzaClose asChild>
+            <Button
+              onClick={() => {}}
+              variant={"destructive"}
+              size={"sm"}
+              className="cursor-pointer opacity-50 hover:opacity-90 transition-all ease-in-out duration-150"
+            >
+              <p>Cancel</p>
+            </Button>
+          </CredenzaClose>
+
+          <Button
+            tabIndex={1}
+            type="submit"
+            size={"sm"}
+            className="cursor-pointer"
+            // disabled={form.formState.isSubmitSuccessful}
+          >
+            {form.formState.isSubmitting ? (
+              <Spinner className="bg-secondary" size={"sm"} />
+            ) : (
+              <p>Upload</p>
+            )}
+          </Button>
+        </CredenzaFooter>
       </form>
     </Form>
   );
