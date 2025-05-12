@@ -46,7 +46,7 @@ export default function RootLayout({
             </section>
             <UploadDialog />
           </ThemeProvider>
-          <Toaster />
+          <Toaster richColors closeButton />
         </body>
       </html>
     </ClerkProvider>

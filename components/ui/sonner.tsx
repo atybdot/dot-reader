@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { Toaster as Sonner, ToasterProps } from "sonner";
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { resolvedTheme: theme } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <Sonner
@@ -18,8 +18,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
         } as React.CSSProperties
       }
       {...props}
-      richColors
-      closeButton
     />
   );
 };
