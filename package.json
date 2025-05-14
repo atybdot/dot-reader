@@ -6,10 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:push": "pnpm prisma db push",
+    "db:pull": "pnpm prisma db pull",
+    "db:generate": "pnpm prisma generate",
+    "db:migrate": "pnpm prisma migrate dev --name "
   },
   "dependencies": {
-    "@prisma/client": "^6.7.0",
+    "@aws-sdk/client-s3": "^3.808.0",
+    "@aws-sdk/lib-storage": "^3.808.0",
     "@clerk/nextjs": "^6.19.1",
     "@hookform/resolvers": "^5.0.1",
     "@prisma/client": "^6.7.0",
@@ -43,6 +48,7 @@
     "@types/node": "^20",
     "@types/react": "@hookform/resolvers/zod",
     "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "19.1.0-rc.1",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "prisma": "^6.7.0",

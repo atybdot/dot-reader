@@ -4,19 +4,18 @@ import { CloudUploadIcon } from "lucide-react";
 import { useAtom, useSetAtom } from "jotai";
 import { uploadDialogAtom } from "@/atoms/upload-dialog.atom";
 
-import { FileInput, FileUploader } from "../ui/file-upload";
+import { FileInput, FileUploader } from "@/components/ui/file-upload";
 import { DropzoneOptions } from "react-dropzone";
 import { filesAtom } from "@/atoms/files.atom";
 
 export default function Component() {
-  const maxSize = 10 * 1024 * 1024;
   const openUploadDialog = useSetAtom(uploadDialogAtom);
   const [files, setFiles] = useAtom(filesAtom);
   const dropZoneConfig = {
     accept: {
       "application/epub+zip": [".epub"],
     },
-    maxSize: 1024 * 1024 * 10,
+    maxSize: 1024 * 1024 * 50,
     multiple: false,
     onDropAccepted(files, event) {
       console.log(files);

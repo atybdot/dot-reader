@@ -23,10 +23,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { DropzoneOptions } from "react-dropzone";
 import { PartialMetadata } from "@/types/metadata";
-import { CredenzaClose, CredenzaFooter } from "../ui/vaul";
-import { Button } from "../ui/button";
-import { Skeleton } from "../ui/skeleton";
-import { Spinner } from "../ui/spinner";
+import { CredenzaClose, CredenzaFooter } from "@/components/ui/vaul";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
+import { uploadData } from "@/actions/upload";
 
 export const formSchema = z.object({
   cover: z.string(),
@@ -39,9 +40,11 @@ export const formSchema = z.object({
 });
 
 export default function UploadForm({
+  file,
   metadata,
   ref,
 }: {
+  file: File;
   metadata: PartialMetadata;
   ref: React.Ref<HTMLFormElement>;
 }) {
@@ -61,35 +64,31 @@ export default function UploadForm({
     defaultValues: {
       title: metadata.title,
       author: metadata.author,
-      cover: metadata.cover,
       year: metadata.year,
+      cover: metadata.coverUrl,
       language: metadata.language,
       identifiers: metadata.identifiers,
       totalPages: 120,
     },
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await new Promise((res) => {
-      setTimeout(() => {
-        res("");
-      }, 2000);
-    });
     try {
-      toast.info("form submited", {
-        description: (
-          <pre>
-            <code>{JSON.stringify(values, null, 2)}</code>
-          </pre>
-        ),
+      const cover = await (await fetch(previewURL)).blob();
+      await uploadData({
+        book: file,
+        coverBlob: cover,
+        metadata: {
+          ...values,
+          publisher: metadata.publisher,
+          rights: metadata.rights,
+        },
       });
     } catch (error) {
-      console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
+      throw error;
     }
   }
-
   useEffect(() => {
-    setURL(metadata.cover);
+    setURL(metadata.coverUrl);
   }, []);
   return (
     <Form {...form}>
@@ -111,6 +110,8 @@ export default function UploadForm({
                       if (e.length > 0) {
                         const url = URL.createObjectURL(e[0]);
                         setURL(url);
+                      } else {
+                        setURL(metadata.coverUrl);
                       }
                     }
                     setFiles(e);
@@ -124,7 +125,7 @@ export default function UploadForm({
                     className="outline-dashed outline-1 outline-muted-foreground/50"
                   >
                     {(files && files.length > 0 && previewURL.length > 0) ||
-                    metadata.cover ? (
+                    metadata.coverUrl ? (
                       <img
                         className="aspect-video w-10/12 mx-auto p-3 object-contain "
                         src={previewURL}
@@ -305,11 +306,20 @@ export default function UploadForm({
             tabIndex={1}
             type="submit"
             size={"sm"}
-            className="cursor-pointer"
-            // disabled={form.formState.isSubmitSuccessful}
+            className={cn(
+              "cursor-pointer min-w-[6cw]",
+              form.formState.isSubmitSuccessful
+                ? "bg-green-500 text-foreground"
+                : ""
+            )}
+            // disabled={
+            //   form.formState.isSubmitting || form.formState.isSubmitSuccessful
+            // }
           >
             {form.formState.isSubmitting ? (
               <Spinner className="bg-secondary" size={"sm"} />
+            ) : form.formState.isSubmitSuccessful ? (
+              <p>Successful</p>
             ) : (
               <p>Upload</p>
             )}

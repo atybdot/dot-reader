@@ -14,7 +14,7 @@ export const extractMetadata = async (
       author: metadata.creator,
       publisher: metadata.publisher,
       year: new Date(metadata.pubdate).getFullYear().toString(),
-      cover: (await book.coverUrl()) ?? "",
+      coverUrl: (await book.coverUrl()) ?? "",
       identifiers: [metadata.identifier],
       language: metadata.language,
       rights: metadata.rights,
