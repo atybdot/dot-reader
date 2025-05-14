@@ -4,16 +4,14 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Credenza,
   CredenzaBody,
-  CredenzaClose,
   CredenzaContent,
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui/vaul";
-import { Button } from "./ui/button";
 import { uploadDialogAtom } from "@/atoms/upload-dialog.atom";
 import { filesAtom } from "@/atoms/files.atom";
-import UploadForm, { formSchema } from "./blocks/uploadForm";
+import UploadForm from "./blocks/uploadForm";
 import { extractMetadata } from "@/utils/extractMetadata";
 
 import UploadFormSkeleton from "./skeletons/upload-form.skeleton";
@@ -62,7 +60,11 @@ function UploadDialog() {
           className="min-h-44 overflow-scroll sm:overflow-auto"
         >
           {!loading ? (
-            metadata && <UploadForm ref={formRef} metadata={metadata} />
+            metadata &&
+            files &&
+            files[0] && (
+              <UploadForm ref={formRef} metadata={metadata} file={files[0]} />
+            )
           ) : (
             <UploadFormSkeleton />
           )}
