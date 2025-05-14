@@ -1,5 +1,7 @@
 "use client";
 import { useAtom } from "jotai";
+import { useQueryState } from "nuqs";
+import { parseAsBoolean } from "nuqs";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Credenza,
@@ -9,7 +11,6 @@ import {
   CredenzaHeader,
   CredenzaTitle,
 } from "@/components/ui/vaul";
-import { uploadDialogAtom } from "@/atoms/upload-dialog.atom";
 import { filesAtom } from "@/atoms/files.atom";
 import UploadForm from "./blocks/uploadForm";
 import { extractMetadata } from "@/utils/extractMetadata";
@@ -19,7 +20,7 @@ import { Skeleton } from "./ui/skeleton";
 import { PartialMetadata } from "@/types/metadata";
 
 function UploadDialog() {
-  const [open, setOpen] = useAtom(uploadDialogAtom);
+  const [open, setOpen] = useQueryState("newBook", parseAsBoolean.withDefault(false));
   const [files, setFiles] = useAtom(filesAtom);
   const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState<boolean>();
@@ -37,15 +38,11 @@ function UploadDialog() {
         }
       }
     })();
-    () => {
-      setFiles(null);
-    };
   }, [files]);
 
   return (
     <Credenza
-      open={files && files.length > 0 ? open : false}
-      // open={open}
+      open={open}
       onOpenChange={(open) => {
         setFiles([]);
         setOpen(open);
