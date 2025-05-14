@@ -9,39 +9,49 @@ datasource db {
 }
 
 model User {
-  id    String @id
-  email String @unique
-  Files File[]
+  id      String @id
+  email   String @unique
+  FileIds File[]
 
   @@map("user")
 }
 
 model File {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   src        String
-  metadata   Metadata @relation(fields: [metadataId], references: [id])
-  metadataId String   @unique
-  userid     String?
-  user       User?    @relation(fields: [userid], references: [id])
+  key        String
+  metadata   Metadata? @relation(fields: [metadataId], references: [id])
+  metadataId String?   @unique
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?
 
   @@map("file")
 }
 
 model Metadata {
-  id   String @id @default(cuid())
-  File File[]
+  id String @id @default(cuid())
 
   title       String
-  cover       String
+  coverId     String?
+  cover       Cover?
   author      String
   publisher   String   @default("unknown")
   year        String   @default("unknown")
   totalPages  Int      @default(0)
   identifiers String[]
   language    String   @default("en")
-  rights      String   @default("none")
+  rights      String?  @default("none")
   tags        String[] @default(["no tags"])
-  category    String   @default("no category")
+  category    String?  @default("no category")
+  File        File?
 
   @@map("metadata")
+}
+
+model Cover {
+  id         String    @id @default(cuid())
+  key        String
+  src        String
+  metadata   Metadata? @relation(fields: [metadataId], references: [id])
+  metadataId String?   @unique
 }
