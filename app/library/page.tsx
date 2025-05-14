@@ -1,11 +1,5 @@
-import BreadcrumbBar from "@/components/bread-crumb-bar";
-
 "use client";
-import AddNewBook from "@/components/blocks/add-book";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import BreadcrumbBar from "@/components/bread-crumb-bar";
 export default function Page() {
   return (
     <section className=" min-h-svh grid grid-rows-[auto_1fr] w-full">
