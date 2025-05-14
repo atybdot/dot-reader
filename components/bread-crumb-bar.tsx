@@ -10,9 +10,16 @@ import {
 import { useUrlPath } from "@/hooks/use-url-path";
 import { BookPlusIcon } from "lucide-react";
 import { Button } from "./ui/button";
+import { useQueryState } from "nuqs";
 
 function BreadcrumbBar() {
   const { pathFragments } = useUrlPath();
+  const [open, setOpen] = useQueryState("newBook", {
+    defaultValue: false,
+    parse(value) {
+      return Boolean(value);
+    },
+  });
   return (
     <div className="py-2 mt-3 px-4 flex justify-between items-center">
       <Breadcrumb className="font-mono">
@@ -40,7 +47,11 @@ function BreadcrumbBar() {
           })}
         </BreadcrumbList>
       </Breadcrumb>
-      <Button className="inline-flex gap-x-2 h-fit py-1" size={"sm"}>
+      <Button
+        onClick={() => setOpen(true)}
+        className="inline-flex gap-x-2 h-fit py-1"
+        size={"sm"}
+      >
         <BookPlusIcon className="" />
         <p>New Book</p>
       </Button>
