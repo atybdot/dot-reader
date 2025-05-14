@@ -15,8 +15,6 @@ export const useUrlPath = () => {
         href += array[tmp] + (tmp === index ? "" : "/");
         tmp++;
       }
-      console.log(href);
-
       return { href, name: item };
     });
 
