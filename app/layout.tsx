@@ -6,6 +6,7 @@ import { Navbar } from "@/components/blocks/navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import UploadDialog from "@/components/upload-dialog";
+import Providers from "@/components/providers";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -38,16 +39,14 @@ export default function RootLayout({
       <body
         className={`${plusJakarta.variable} ${loraserif.variable} ${geistMono.variable} antialiased`}
       >
-        <ClerkProvider>
-          <ThemeProvider>
-            <section className="grid min-h-svh grid-rows-[auto_auto_1fr] ">
-              <Navbar />
-              {children}
-            </section>
-            <UploadDialog />
-          </ThemeProvider>
+        <Providers>
+          <section className="grid min-h-svh grid-rows-[auto_auto_1fr] ">
+            <Navbar />
+            {children}
+          </section>
+          <UploadDialog />
           <Toaster richColors closeButton />
-        </ClerkProvider>
+        </Providers>
       </body>
     </html>
   );
