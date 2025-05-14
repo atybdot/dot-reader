@@ -137,7 +137,8 @@
   --tracking-normal: 0em;
 }
 
-[data-theme="dark"] {
+[data-theme="dark"],
+.dark {
   --background: oklch(0 0 0);
   --foreground: oklch(0.93 0 228.79);
   --card: oklch(0.21 0.01 274.53);
