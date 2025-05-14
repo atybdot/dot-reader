@@ -12,9 +12,9 @@ function Providers({
     <AuthProvider>
       <QueryProvider>
         <UrlStateProvider>
-          <StoreProvider>
-            <Theme>{children}</Theme>
-          </StoreProvider>
+          {/* <StoreProvider> */}
+          <Theme>{children}</Theme>
+          {/* </StoreProvider> */}
         </UrlStateProvider>
       </QueryProvider>
     </AuthProvider>

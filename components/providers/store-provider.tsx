@@ -1,4 +1,4 @@
-import { fileStore } from "@/lib/store";
+import { store } from "@/lib/store";
 import { Provider } from "jotai";
 import React from "react";
 
@@ -7,7 +7,7 @@ function StoreProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <Provider store={fileStore}>{children}</Provider>;
+  return <Provider store={store}>{children}</Provider>;
 }
 
 export default StoreProvider;
