@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Plus_Jakarta_Sans, Lora } from "next/font/google";
-import "./globals.css";
+import "@/styles/global.css";
 import ThemeProvider from "@/components/providers/theme-provider";
 import { Navbar } from "@/components/blocks/navbar";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -34,11 +34,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${plusJakarta.variable} ${loraserif.variable} ${geistMono.variable} antialiased`}
-        >
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${plusJakarta.variable} ${loraserif.variable} ${geistMono.variable} antialiased`}
+      >
+        <ClerkProvider>
           <ThemeProvider>
             <section className="grid min-h-svh grid-rows-[auto_auto_1fr] ">
               <Navbar />
@@ -47,8 +47,8 @@ export default function RootLayout({
             <UploadDialog />
           </ThemeProvider>
           <Toaster richColors closeButton />
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
